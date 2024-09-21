@@ -16,6 +16,8 @@ public class KafkaProducerController {
 
     private static final Logger logger = LogManager.getLogger(KafkaProducerController.class);
 
+    private static final String TOPIC = "test-topic";
+
     @Value("${HOSTNAME:unknown}")
     private String podName;
 
@@ -24,16 +26,16 @@ public class KafkaProducerController {
 
     @GetMapping("/ping")
     public ResponseEntity<String> ping() {
+        logger.info("Ping from pod {}", podName);
         return ResponseEntity.ok("ping from pod " + podName);
     }
 
     @PostMapping("/produce")
     public ResponseEntity<Message> produce(@RequestBody Message message) {
-        kafkaService.produceMessage("test-topic", message);
+        logger.info("Producing message:{} to {}", message, TOPIC);
+        kafkaService.produceMessage(TOPIC, message);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
-
-
 
 }
 

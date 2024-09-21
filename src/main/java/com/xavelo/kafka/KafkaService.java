@@ -12,23 +12,28 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class KafkaService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaService.class);
+    private static final Logger logger = LoggerFactory.getLogger(KafkaService.class);
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    public KafkaService(KafkaTemplate<String, String> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     public void produceMessage(String topic, Message message) {
-        LOGGER.info("-> topic '{}' --- message '{}'", topic, message);
+        logger.info("-> topic '{}' --- message '{}'", topic, message);
         kafkaTemplate.send(topic, message.getValue());
+        logger.info("Message sent to topic '{}'", topic);
     }
 
     public void sendAsynchMessage(String message) {
         CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send("pi-topic", message);
         future.whenComplete((result, ex) -> {
             if (ex == null) {
-                LOGGER.error("Sent message=[" + message + "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                logger.error("Sent message=[" + message + "] with offset=[" + result.getRecordMetadata().offset() + "]");
             } else {
-                LOGGER.error("Unable to send message=[" + message + "] due to : " + ex.getMessage());
+                logger.error("Unable to send message=[" + message + "] due to : " + ex.getMessage());
             }
         });
     }
