@@ -27,6 +27,12 @@ public class KafkaService {
         logger.info("Message sent to topic '{}'", topic);
     }
 
+    public void produceMessageString(String topic, String message) {
+        logger.info("-> topic '{}' --- message '{}'", topic, message);
+        kafkaTemplate.send(topic, message);
+        logger.info("Message sent to topic '{}'", topic);
+    }
+
     public void sendAsynchMessage(String message) {
         CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send("pi-topic", message);
         future.whenComplete((result, ex) -> {

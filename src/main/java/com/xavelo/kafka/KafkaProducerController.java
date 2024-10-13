@@ -32,8 +32,15 @@ public class KafkaProducerController {
 
     @PostMapping("/produce")
     public ResponseEntity<Message> produce(@RequestBody Message message) {
-        logger.info("Producing message:{} to {}", message, TOPIC);
+        logger.info("Producing message {} to {}", message, TOPIC);
         kafkaService.produceMessage(TOPIC, message);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/produce/string")
+    public ResponseEntity<String> produceString(@RequestBody String message) {
+        logger.info("Producing message {} to {}", message, TOPIC);
+        kafkaService.produceMessageString(TOPIC, message);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
