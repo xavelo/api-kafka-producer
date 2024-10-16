@@ -1,5 +1,6 @@
 package com.xavelo.kafka;
 
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,15 @@ public class KafkaService {
 
     public void produceMessage(String topic, Message message) {
         logger.info("-> topic '{}' --- message '{}'", topic, message);
-        kafkaTemplate.send(topic, message.getValue());
-        logger.info("Message sent to topic '{}'", topic);
+        ProducerRecord<String, String> record = new ProducerRecord<>(topic, message.getKey(), message.getValue());
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record);
+        future.whenComplete((result, e) -> {
+            if (e == null) {
+                logger.info("Message successfully sent to '{}' [parition {}]", result.getRecordMetadata().topic(), result.getRecordMetadata().partition());                
+            } else {
+                logger.error("Error sending message: {}", e.getMessage(), e);
+            }
+        });
     }
 
     public void produceMessageString(String topic, String message) {
