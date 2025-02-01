@@ -49,7 +49,7 @@ public class KafkaService {
         logger.info("-> topic '{}' --- message '{}' in batch size '{}'", topic, message, size);
         for(int i=0; i<size; i++) {
             kafkaTemplate.send(topic, i + " - " + message);
-            logger.info("Message sent to topic '{}'", topic);
+            logger.info("Message '{}' sent to topic '{}'", i + " - " + message, topic);
         }
 
     }
