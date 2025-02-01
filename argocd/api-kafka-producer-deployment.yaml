@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: api-kafka-producer-deployment
   annotations:
-    commitID: "e290daa6746f37da8c443a3d154a6ac929425536"
+    commitID: "2dc2cf97e1b256a3e4eed24f43608d6e9552c317"
 spec:
   replicas: 1
   selector:
@@ -21,6 +21,6 @@ spec:
     spec:
       containers:
         - name: api-kafka-producer
-          image: 'xavelo/api-kafka-producer:e290daa6746f37da8c443a3d154a6ac929425536'
+          image: 'xavelo/api-kafka-producer:2dc2cf97e1b256a3e4eed24f43608d6e9552c317'
           ports:
             - containerPort: 80
