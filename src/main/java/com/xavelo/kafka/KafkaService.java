@@ -35,10 +35,23 @@ public class KafkaService {
         });
     }
 
+    public void produceMessage(String topic, String message) {
+
+    }
+
     public void produceMessageString(String topic, String message) {
         logger.info("-> topic '{}' --- message '{}'", topic, message);
         kafkaTemplate.send(topic, message);
         logger.info("Message sent to topic '{}'", topic);
+    }
+
+    public void produceMessageStringBatch(String topic, String message, int size) {
+        logger.info("-> topic '{}' --- message '{}' in batch size '{}'", topic, message, size);
+        for(int i=0; i<size; i++) {
+            kafkaTemplate.send(topic, i + " - " + message);
+            logger.info("Message sent to topic '{}'", topic);
+        }
+
     }
 
     public void sendAsynchMessage(String message) {

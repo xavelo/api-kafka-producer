@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class KafkaProducerController {
@@ -41,6 +38,13 @@ public class KafkaProducerController {
     public ResponseEntity<String> produceString(@RequestBody String message) {
         logger.info("Producing message {} to {}", message, TOPIC);
         kafkaService.produceMessageString(TOPIC, message);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/produce/string/batch/{size}")
+    public ResponseEntity<String> produceStringBatch(@PathVariable int size, @RequestBody String message) {
+        logger.info("Producing message {} to {} in batch size {}", message, TOPIC, size);
+        kafkaService.produceMessageStringBatch(TOPIC, message, size);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
