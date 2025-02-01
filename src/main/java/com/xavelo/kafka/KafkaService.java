@@ -8,6 +8,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -45,13 +46,16 @@ public class KafkaService {
         logger.info("Message sent to topic '{}'", topic);
     }
 
-    public void produceMessageStringBatch(String topic, String message, int size) {
+    public void produceMessageBatch(String topic, String message, int size) {
         logger.info("-> topic '{}' --- message '{}' in batch size '{}'", topic, message, size);
+        String key = null;
+        ProducerRecord<String, String> record = null;
         for(int i=0; i<size; i++) {
-            kafkaTemplate.send(topic, i + " - " + message);
-            logger.info("Message '{}' sent to topic '{}'", i + " - " + message, topic);
+            key = UUID.randomUUID().toString();
+            record = new ProducerRecord<>(topic, key , message);
+            kafkaTemplate.send(record);
+            logger.info("Message '{}'-'{}' sent to topic '{}'", key , i + " - " + message, topic);
         }
-
     }
 
     public void sendAsynchMessage(String message) {

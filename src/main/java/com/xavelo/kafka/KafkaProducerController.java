@@ -41,10 +41,10 @@ public class KafkaProducerController {
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
-    @PostMapping("/produce/string/batch/{size}")
+    @PostMapping("/produce/batch/{size}")
     public ResponseEntity<String> produceStringBatch(@PathVariable("size") int size, @RequestBody String message) {
         logger.info("Producing message {} to {} in batch size {}", message, TOPIC, size);
-        kafkaService.produceMessageStringBatch(TOPIC, message, size);
+        kafkaService.produceMessageBatch(TOPIC, message, size);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
